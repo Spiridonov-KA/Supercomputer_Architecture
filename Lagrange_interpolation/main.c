@@ -178,23 +178,25 @@ int main(int argc, char *argv[]) {
 			memcpy(total_res + size_x, res, sizeof(double) * next_size);
 			size_x += next_size;
 		}
+
+		#if DEBUG
 		printf("TOTAL_RES:\n");
 		for (int i = 0; i < size_x; ++i) {
 			printf("%lf ", total_res[i]);
 		}
 		printf("\n");
+		#endif
 	}
 	else {
-		for (int i = 1; i < procNum; ++i) {
-			MPI_Send(&size_x, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
-			MPI_Send(res, size_x, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
-		}
+		MPI_Send(&size_x, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+		MPI_Send(res, size_x, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
 	}
 	
 	free(knownx);
 	free(knowny);
 	free(x);
 	free(res);
+	free(total_res);
 
 	MPI_Finalize();
 
